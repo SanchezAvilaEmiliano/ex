@@ -1,206 +1,167 @@
-aaaaaaMenú Puntos
---------o---------o-------o---------o-------
-1. Click derecho en app -> New -> Android Resource Directory -> menu
+------------Android Mainfest
+<!-- AndroidManifest.xml -->
+<manifest package="com.example.listview221025" xmlns:android="http://schemas.android.com/apk/res/android">
 
-2. Crear un Menu Resource File llamado 'mainmenu'
+    <application
+        android:allowBackup="true"
+        android:label="Listview221025"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.Material3.DayNight.NoActionBar">
 
-3. Ir a AndroidManifest.xml y buscar el activity de MainActivity y colocar la siguiente línea:
+        <activity android:name=".DetalleActivity"
+            android:theme="@style/Theme.AppCompat.Light.DarkActionBar"/>
 
-		android:theme="@style/Theme.AppCompat.Light.DarkActionBar"
+        <activity android:name=".MainActivity"
+            android:exported="true"
+            android:theme="@style/Theme.AppCompat.Light.DarkActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
 
-4. En el MainActivity de Java, dejar solo:
+    </application>
+</manifest>
 
-			1. onCreateOptionsMenu
-			2. onOptionsItemSelected
-
-5. Dentro del mainmenu.xml declarar los items con:
-
-		<item
-			android:id="@+id/[Nombrex]"
-			android:title="[Nombrex]"
-			android:icon="@drawable/EscojeItem"
-			app:showAsAction="always"/>
-
-6. Dentro del onCreateOptionsMenu colocar:
-
-			getMenuInflater().inflate(R.menu.mainmenu, menu);
-			return true;
-
-7. En el onOptionsItemSelected colocar:
-
-			if(item.getItemId() == R.id.[nombreitem]){
-			
-			}
-
---------o---------o-------o---------o-------
-
-Fragmentos Estáticos
-
---------o---------o-------o---------o-------
-
-1. Dentro del activitymain.xml crea un FrameLayout con:
-
-				android:id"@id/container"
-
-2. Crea un LinearLayout abajo con los botones necesarios
-
-3. Crea los Fragmentos Necesarios
-
-4.Dentro de MainActivity declarar lo siguiente:
-
-			FragmentTransaction transaction;
-			[NombreFragmento] o[NombreFragmento];
-			EditText ---;
-
-Dentro del onCreate:
-
-
-			o[nombrefrag] = new [nombrefrag]();
-			getSupportFragmentManager().beginTransaction().add(R.id.container.oinicio).commit();
-
-Dentro del onClick:
-
-			String cadenita = ((Button)v).getText().toString();
-
-			transaction = getSupportFragmentManager().beginTransaction();
-
-			if(cadenita.equals("-----"){
-				transaction.replace(R.id.container, o[nombrex];
-			}
-
-5. Dentro de los fragmentos, deje el onViewCreated y Crear un Override:
-
-			onCreateView donde irá:
-
-			View vistita;
-			vistita = inflater.inflate(R.layout.fragment_[nombre], container, false);
-			dato = vistita.findViewById(R.id.dato[xml]);
-			boton = vistita.findViewById(R.id.boton[xml]);
-			oinicio = new Inicio();
-			return vistita;
-
-6. Si en el onClick hay cálculos:
-
-		clasesita objetito = new clasesita();
-		objetito.setDato(Integer.parseInt(datoxml.getText().toString();
-
-
---------o---------o-------o---------o-------
-
-
-Fragmentos Dinámicos
-
---------o---------o-------o---------o-------
-
-
-1. En el activitymain.xml colocar un FragmentContainerView, que debería verse así:
-
-		<androidx.fragment.app.FragmentContainerView
-    			xmlns:android="http://schemas.android.com/apk/res/android"
-    			xmlns:app="http://schemas.android.com/apk/res-auto"
-    			android:id="@+id/nav_host_fragment"
-    			android:name="androidx.navigation.fragment.NavHostFragment"
-    			android:layout_width="match_parent"
-    			android:layout_height="match_parent"
-    			app:defaultNavHost="true"
-    			app:navGraph="@navigation/navegador" />
-
-2. Click derecho a app -> New -> Android Resource Directory -> navigation -> y después declarar el Android Resource File para colocar
-el nombre de 'navegador'
-
-3. En el navegador, ubicarse en la Paleta y darle Add Destination al Inicio. Debe verse así:
-
- <fragment
-        android:id="@+id/inicio"
-        android:name="com.example.navegadordtc.Inicio"
-        android:label="fragment_inicio"
-        tools:layout="@layout/fragment_inicio">
-        <action
-            android:id="@+id/action_inicio_to_doble"
-            app:destination="@+id/doble" />
-    </fragment>
-
-PONER OTRO ACTION SI VA A EXISTIR OTRO BOTÓN.
-
-
-4.
-		
-		EditTexts
-		
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
-        Button sig = view.findViewById(R.id.siguiente);
-        sig.setOnClickListener(this);
-
-        Button regresa = view.findViewById(R.id.regresar);
-        regresa.setOnClickListener(this);
-
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_doble, container, false);
-
-
---------o---------o-------o---------o-------
-
-ListView con Imágenes
-
---------o---------o-------o---------o-------
-
-
-1. Declarar un ListView en el activitymain.xml y ponerle id vistita:
-
-	<ListView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        android:id="@+id/vistita"/>
-
-2. En el layout, crear un archivo 'basurita.xml':
-
-		    android:layout_width="match_parent"
+--------Avtivity main.xml
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ly_main"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="horizontal">
+    android:orientation="vertical"
+    android:paddingTop="16dp">
+
+    <ListView
+        android:id="@+id/vistita"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+</LinearLayout>
+---------------basurita.xml
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="72dp"
+    android:orientation="horizontal"
+    android:padding="8dp">
 
     <ImageView
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:id="@+id/imageicon"/>
+        android:id="@+id/imageicon"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:contentDescription="iconito"
+        android:src="@android:drawable/ic_menu_directions"/>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:paddingStart="12dp">
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:id="@+id/textview"
-            android:textSize="20dp"
-            android:layout_marginTop="10dp"
-            android:gravity="center"/>
-
-        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="uno"
+            android:textSize="18sp"
+            android:layout_marginTop="6dp"/>
+
+        <TextView
             android:id="@+id/textview2"
-            android:textSize="20dp"
-            android:gravity="center"/>
-
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="deportes 1"
+            android:textSize="14sp"/>
     </LinearLayout>
+</LinearLayout>
+-------------------------mainmenu.xml(dentro de res-menu-)
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/opcion_unica"
+        android:title="Opción única"
+        android:icon="@android:drawable/ic_menu_info_details"
+        app:showAsAction="always"/>
+</menu>
+----------Activity_detalle.xml
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ly_detalle"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
+    <ImageView
+        android:id="@+id/iv_fotito"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerInside"
+        android:contentDescription="fotito"
+        android:src="@android:drawable/ic_menu_gallery"/>
+</FrameLayout>
+-------------------MainActivity.java
+package com.example.listview221025;
 
-3. Crear una clase java llamada 'Adaptador' (esta debe incluir un :
+import android.os.Bundle;
+import android.content.Intent;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ListView;
+import android.widget.Toast;
+
+import androidx.activity.EdgeToEdge;
+import androidx.appcompat.app.AppCompatActivity;
+
+public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
+
+    private ListView vistita;
+
+    String arreglo1[] = {"uno", "dos", "tres"};
+    String arreglo2[] = {"deportes 1", "deportes 2", "deportes 3"};
+    int imagenes[] = {
+            android.R.drawable.ic_menu_directions,
+            android.R.drawable.ic_menu_directions,
+            android.R.drawable.ic_menu_directions
+    };
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        EdgeToEdge.enable(this);
+        setContentView(R.layout.activity_main);
+
+        vistita = findViewById(R.id.vistita);
+
+        Adaptador adaptador = new Adaptador(getApplicationContext(), arreglo1, arreglo2, imagenes);
+        vistita.setAdapter(adaptador);
+        vistita.setOnItemClickListener(this);
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        // Solo el PRIMER elemento abre la segunda Activity
+        if (position == 0) {
+            Intent i = new Intent(MainActivity.this, DetalleActivity.class);
+            startActivity(i);
+        } else {
+            Toast.makeText(this, "Elemento " + arreglo1[position], Toast.LENGTH_SHORT).show();
+        }
+    }
+}
+------------------Adaptador.java
+package com.example.listview221025;
+
+import android.content.Context;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+public class Adaptador extends BaseAdapter {
 
     Context context;
     String lista1[];
     String lista2[];
     int listaimagenes[];
     LayoutInflater inflater;
-
 
     public Adaptador(Context context, String[] lista1, String[] lista2, int[] listaimagenes) {
         this.context = context;
@@ -211,64 +172,71 @@ ListView con Imágenes
     }
 
     @Override
-    public int getCount() {
-
-        return (lista2 != null) ? lista2.length : 0;
-    }
+    public int getCount() { return (lista1 != null) ? lista1.length : 0; }
 
     @Override
-    public Object getItem(int position) {
-        return lista1[position];
-    }
+    public Object getItem(int position) { return lista1[position]; }
 
     @Override
-    public long getItemId(int position) {
-        return position;
-    }
+    public long getItemId(int position) { return position; }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        if (convertView == null) {
+        if (convertView == null)
             convertView = inflater.inflate(R.layout.basurita, parent, false);
-        }
 
         TextView textview = convertView.findViewById(R.id.textview);
         TextView textview2 = convertView.findViewById(R.id.textview2);
-        ImageView img = convertView.findViewById(R.id.imageicon);
+        ImageView imageicon = convertView.findViewById(R.id.imageicon);
 
         textview.setText(lista1[position]);
         textview2.setText(lista2[position]);
-        deporteimg.setImageResource(listaimagenes[position]);
+        imageicon.setImageResource(listaimagenes[position]);
 
         return convertView;
     }
+}
+-------------------DetalleActivity.java
+package com.example.listview221025;
 
-4. En el MainActivity declarar lo siguiente:
+import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.widget.ImageView;
+import android.widget.Toast;
 
-		 String arreglo1[] = {"uno", "dos", "tres","cuatro", "cinco", "seis", "siete", "ocho", "nueve", "diez"};
-    String arreglo2[] = {"carreras", "carreras2", "correr", "cuerda", "dep", "depo1", "depo2", "fucho", "fucho2", "gim"};
-    int imagenes[] = {R.drawable.op, R.drawable.op2, R.drawable.op3, R.drawable.op13, R.drawable.op5, R.drawable.op6, R.drawable.op7, R.drawable.op8, R.drawable.op12, R.drawable.op10};
-    ListView listview;
+import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
+public class DetalleActivity extends AppCompatActivity {
+
+    private ImageView ivFotito;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
+        setContentView(R.layout.activity_detalle);
 
-        setContentView(R.layout.activity_main);
+        ivFotito = findViewById(R.id.iv_fotito);
+        // Ya tiene una imagen por defecto en el XML; si quieres cambiarla programáticamente:
+        // ivFotito.setImageResource(android.R.drawable.ic_menu_gallery);
+    }
 
-        listview = findViewById(R.id.vistitas);
-
-
-        listview.setOnItemClickListener(this);
-
-
-        Adaptador adaptador = new Adaptador(getApplicationContext(), arreglo1, arreglo2, imagenes);
-        listview.setAdapter(adaptador);
-
+    // Menú de puntitos (una sola opción)
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.mainmenu, menu);
+        return true;
     }
 
     @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) { //Toast.makeText(this, String.valueOf(position), Toast.LENGTH_SHORT).show();
-        
-    }		
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.opcion_unica) {
+            Toast.makeText(this, "Opción única presionada", Toast.LENGTH_SHORT).show();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+}
