@@ -1,17 +1,17 @@
 ------------Android Mainfest
-<!-- AndroidManifest.xml -->
 <manifest package="com.example.listview221025" xmlns:android="http://schemas.android.com/apk/res/android">
-
     <application
         android:allowBackup="true"
         android:label="Listview221025"
         android:supportsRtl="true"
         android:theme="@style/Theme.Material3.DayNight.NoActionBar">
 
-        <activity android:name=".DetalleActivity"
+        <activity
+            android:name=".DetalleActivity"
             android:theme="@style/Theme.AppCompat.Light.DarkActionBar"/>
 
-        <activity android:name=".MainActivity"
+        <activity
+            android:name=".MainActivity"
             android:exported="true"
             android:theme="@style/Theme.AppCompat.Light.DarkActionBar">
             <intent-filter>
@@ -29,7 +29,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:paddingTop="16dp">
+    android:layout_marginTop="70dp">
 
     <ListView
         android:id="@+id/vistita"
@@ -87,19 +87,27 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <!-- Contenedor del fragment -->
+    <FrameLayout
+        android:id="@+id/fl_contenedor_detalle"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"/>
+
+    <!-- Imagen clickeable -->
     <ImageView
-        android:id="@+id/iv_fotito"
+        android:id="@+id/iv_palomita"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="centerInside"
-        android:contentDescription="fotito"
         android:src="@android:drawable/ic_menu_gallery"/>
 </FrameLayout>
 -------------------MainActivity.java
 package com.example.listview221025;
 
-import android.os.Bundle;
 import android.content.Intent;
+import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -110,8 +118,10 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
 
+    private static final String TAG = "ListviewDebug";
     private ListView vistita;
 
+    // *** Asegúrate que los 3 arreglos tengan 3 elementos ***
     String arreglo1[] = {"uno", "dos", "tres"};
     String arreglo2[] = {"deportes 1", "deportes 2", "deportes 3"};
     int imagenes[] = {
@@ -128,17 +138,27 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         vistita = findViewById(R.id.vistita);
 
-        Adaptador adaptador = new Adaptador(getApplicationContext(), arreglo1, arreglo2, imagenes);
+        Adaptador adaptador = new Adaptador(
+                getApplicationContext(),
+                arreglo1, arreglo2, imagenes
+        );
         vistita.setAdapter(adaptador);
         vistita.setOnItemClickListener(this);
+
+        // ====== CONFIRMACIÓN: deben ser 3 ======
+        int count = adaptador.getCount();
+        Log.d(TAG, "getCount() = " + count
+                + " | a1=" + arreglo1.length
+                + " a2=" + arreglo2.length
+                + " imgs=" + imagenes.length);
+        Toast.makeText(this, "items = " + count, Toast.LENGTH_SHORT).show();
+        // =======================================
     }
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        // Solo el PRIMER elemento abre la segunda Activity
         if (position == 0) {
-            Intent i = new Intent(MainActivity.this, DetalleActivity.class);
-            startActivity(i);
+            startActivity(new Intent(this, DetalleActivity.class));
         } else {
             Toast.makeText(this, "Elemento " + arreglo1[position], Toast.LENGTH_SHORT).show();
         }
@@ -148,6 +168,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 package com.example.listview221025;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -156,6 +177,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 public class Adaptador extends BaseAdapter {
+
+    private static final String TAG = "ListviewDebug";
 
     Context context;
     String lista1[];
@@ -169,16 +192,24 @@ public class Adaptador extends BaseAdapter {
         this.lista2 = lista2;
         this.listaimagenes = listaimagenes;
         this.inflater = LayoutInflater.from(context);
+
+        Log.d(TAG, "Constructor: l1=" + (lista1==null?0:lista1.length)
+                + " l2=" + (lista2==null?0:lista2.length)
+                + " imgs=" + (listaimagenes==null?0:listaimagenes.length));
     }
 
     @Override
-    public int getCount() { return (lista1 != null) ? lista1.length : 0; }
+    public int getCount() {
+        int n1 = (lista1 != null) ? lista1.length : 0;
+        int n2 = (lista2 != null) ? lista2.length : 0;
+        int n3 = (listaimagenes != null) ? listaimagenes.length : 0;
+        int min = Math.min(n1, Math.min(n2, n3));
+        Log.d(TAG, "getCount -> min(" + n1 + "," + n2 + "," + n3 + ") = " + min);
+        return min;
+    }
 
-    @Override
-    public Object getItem(int position) { return lista1[position]; }
-
-    @Override
-    public long getItemId(int position) { return position; }
+    @Override public Object getItem(int position) { return lista1[position]; }
+    @Override public long getItemId(int position) { return position; }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
@@ -202,29 +233,39 @@ package com.example.listview221025;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+
+import com.example.listview221025.R;
 
 public class DetalleActivity extends AppCompatActivity {
 
-    private ImageView ivFotito;
+    private ImageView ivPalomita;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
+        EdgeToEdge.enable(this); // si te da lata, puedes borrar esta línea
         setContentView(R.layout.activity_detalle);
 
-        ivFotito = findViewById(R.id.iv_fotito);
-        // Ya tiene una imagen por defecto en el XML; si quieres cambiarla programáticamente:
-        // ivFotito.setImageResource(android.R.drawable.ic_menu_gallery);
+        ivPalomita = findViewById(R.id.iv_palomita);   // <-- asegúrate que exista en el XML
+        ivPalomita.setOnClickListener(v -> mostrarFragment(new HolaFragment()));
     }
 
-    // Menú de puntitos (una sola opción)
+    private void mostrarFragment(Fragment f){
+        View cont = findViewById(R.id.fl_contenedor_detalle); // <-- asegúrate que exista en el XML
+        cont.setVisibility(View.VISIBLE);
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fl_contenedor_detalle, f)
+                .commit();
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.mainmenu, menu);
@@ -234,9 +275,57 @@ public class DetalleActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.opcion_unica) {
-            Toast.makeText(this, "Opción única presionada", Toast.LENGTH_SHORT).show();
+            mostrarFragment(new HolaFragment());
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+}
+---------fragment_hola.xml
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:foregroundGravity="center"
+    android:padding="16dp">
+
+    <Button
+        android:id="@+id/btn_saludito"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="saludito" />
+</FrameLayout>
+-------------HolaFragment.java
+package com.example.listview221025;
+
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+
+import com.example.listview221025.R;
+
+public class HolaFragment extends Fragment {
+
+    public HolaFragment(){}
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_hola, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View v, @Nullable Bundle s) {
+        Button btnSaludito = v.findViewById(R.id.btn_saludito);
+        btnSaludito.setOnClickListener(view ->
+                Toast.makeText(requireContext(), "hola", Toast.LENGTH_SHORT).show());
     }
 }
